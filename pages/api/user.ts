@@ -1,13 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../lib/mongodb";
 import { getSession } from "next-auth/react";
-
-interface User {
-  email: string;
-  name: string;
-  image?: string;
-}
-const dbName = process.env.MONGODB_DB as string;
+import { User } from "@/models/user";
+import { UserType } from "@/types/userType";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
@@ -16,12 +11,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   console.log("User session", session.user);
   const { db } = await connectToDatabase();
-  const user = await db.collection<User>("user").findOne({ email: session.user.email ?? "" });
+  const user = await db.collection<UserType>("user").findOne({ email: session.user.email ?? "" });
 
   if (!user) {
     console.log("User not found, creating a new one...");
     // User not found, create a new one
-    const newUser: User = {
+    const newUser: UserType = {
       email: session.user.email ?? "",
       name: session.user.name ?? "",
       image: session.user.image ?? "",
