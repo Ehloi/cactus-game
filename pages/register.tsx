@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
@@ -13,11 +15,14 @@ const RegisterPage: React.FC = () => {
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, password }),
+      body: JSON.stringify({ email, name, password, passwordConfirm }),
     });
 
     if (response.ok) {
       router.push("/dashboard"); // Redirect to dashboard on successful registration
+      signIn("credentials", { email, password, redirect: false }).then(() => {
+        router.push("/dashboard");
+      });
     } else {
       const errorData = await response.json();
       setErrorMessage(errorData.error || "Registration failed");
@@ -75,11 +80,30 @@ rounded outline-none focus:border-blue-500 text-gray-700"
               className="w-full border-2 border-gray-200 p-3 rounded outline-none focus:border-blue-500 text-gray-700"
             />
           </div>
+          <div>
+            <label className="block mb-1 text-gray-800" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password_confirm"
+              name="password confirm"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              placeholder="Confirm your password"
+              required
+              className="w-full border-2 border-gray-200 p-3 rounded outline-none focus:border-blue-500 text-gray-700"
+            />
+          </div>
           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
             Register
           </button>
         </form>
+        <button onClick={() => signIn("google", { callbackUrl: "/dashboard" })} className="flex items-center justify-center bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+          <img src="/images/google-logo.svg" alt="Google" className=" h-6 w-6 mr-2" />
+          Register with Google
+        </button>
       </div>
     </div>
   );
