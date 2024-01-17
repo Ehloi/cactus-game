@@ -3,6 +3,8 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { User } from "@/types/user";
 import { avatarUrls } from "../public/urls/avatars";
+import { GiMoneyStack } from "react-icons/gi";
+import { FaCoins } from "react-icons/fa6";
 // import "../src/app/globals.css";
 import Navbar from "../components/NavBar";
 const Dashboard: React.FC = () => {
@@ -89,12 +91,14 @@ const Dashboard: React.FC = () => {
                   <p className="text-md text-gray-500">{userProfile.email}</p>
                 </div>
               </div>
-              <div className="mt-4">
-                <p className="text-lg text-gray-700">
-                  <strong>Coins:</strong> {userProfile.coins}
+              <div className="text-lg space-y-2 items-center text-gray-700">
+                <p className="text-lg space-x-2 items-center flex text-gray-700">
+                  <FaCoins className="text-yellow-600" />
+                  <p>{userProfile.coins}</p>
                 </p>
-                <p className="text-lg text-gray-700">
-                  <strong>Cash:</strong> {userProfile.cash}
+                <p className="text-lg space-x-2 items-center flex text-gray-700">
+                  <GiMoneyStack className="fill-green-800" />
+                  <p>{userProfile.cash}</p>
                 </p>
                 {/* Add other additional user information or actions here */}
               </div>

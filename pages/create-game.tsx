@@ -12,6 +12,7 @@ const CreateGame = () => {
     is8Rule: false,
     entryFee: 100,
   };
+  const [errorMessage, setErrorMessage] = useState("");
   const [gameSettings, setGameSettings] = useState(initialGameSettings);
 
   const handleInputChange = (e: any) => {
@@ -22,13 +23,30 @@ const CreateGame = () => {
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Submit game settings
-    console.log(gameSettings);
-    // Redirect to game or display success message
-  };
+    try {
+      const response = await fetch("/api/game", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(gameSettings),
+      });
 
+      const data = await response.json(); // Await the JSON response
+
+      if (response.ok) {
+        // Redirect to game or handle success
+        console.log("Game created:", data);
+        // Redirect or update UI as needed
+      } else {
+        // Display error message from the server
+        setErrorMessage(`Failed to create game: ${data.error}`);
+      }
+    } catch (error: any) {
+      console.error("Error in creating game:", error);
+      setErrorMessage(`An error occurred: ${error.message}`);
+    }
+  };
   return (
     <div>
       <NavBar />
@@ -108,6 +126,7 @@ const CreateGame = () => {
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Launch Game
           </button>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </form>
       </div>
     </div>
