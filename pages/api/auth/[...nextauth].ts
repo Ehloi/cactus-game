@@ -25,7 +25,7 @@ export const authOptions: AuthOptions = {
         if (!credentials) return null;
 
         const { db } = await connectToDatabase();
-        const user = await db.collection("user").findOne({ email: credentials.email });
+        const user = await db.collection("User").findOne({ email: credentials.email });
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
           // Return user object if credentials are valid
           return { id: user.id, email: user.email, name: user.name };

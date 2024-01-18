@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { email, password } = req.body;
       const { db } = await connectToDatabase();
-      const user = await db.collection("user").findOne({ email });
+      const user = await db.collection("User").findOne({ email });
 
       if (user && bcrypt.compareSync(password, user.password)) {
         res.status(200).json({ message: "Logged in successfully" });

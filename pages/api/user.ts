@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: "Unauthorized" });
   }
   const { db } = await connectToDatabase();
-  const user = await db.collection<User>("user").findOne({ email: session.user.email ?? "" });
+  const user = await db.collection<User>("User").findOne({ email: session.user.email ?? "" });
   if (!user) {
     console.log("User not found, creating a new one...");
     // User not found, create a new one
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       coins: 1000,
       cash: 0,
     };
-    await db.collection("user").insertOne(newUser);
+    await db.collection("User").insertOne(newUser);
     return res.status(201).json(newUser);
   }
   if (req.method === "PUT" && req.query.action === "avatar") {
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const avatarUrl = req.body.image;
     try {
       console.log("Updating avatar with image: " + avatarUrl);
-      await db.collection<User>("user").updateOne({ email: session.user.email ?? "" }, { $set: { image: avatarUrl } });
+      await db.collection<User>("User").updateOne({ email: session.user.email ?? "" }, { $set: { image: avatarUrl } });
       return res.status(200).json({ message: "Avatar updated successfully" });
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error on avatar update" });

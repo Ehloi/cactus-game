@@ -3,12 +3,12 @@ import Link from "next/link";
 import NavBar from "../components/NavBar"; // Adjust path as needed
 import { Game } from "@/types/game";
 import { FaCoins } from "react-icons/fa6";
-import { CiUnlock } from "react-icons/ci";
-const PublicGames = () => {
+import { CiLock } from "react-icons/ci";
+const PrivateGames = () => {
   const [games, setGames] = useState<Game[]>([]);
-  const fetchPublicGames = async () => {
+  const fetchPrivateGames = async () => {
     try {
-      const response = await fetch("/api/game?isPrivate=false", {
+      const response = await fetch("/api/game?isPrivate=true", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -19,21 +19,21 @@ const PublicGames = () => {
         console.log(data);
       } else {
         // Handle errors or set error message
-        console.error("Failed to fetch public games");
+        console.error("Failed to fetch private games");
       }
     } catch (error: any) {
-      console.error("Failed to fetch public games:", error);
+      console.error("Failed to fetch private games:", error);
     }
   };
   useEffect(() => {
-    fetchPublicGames();
+    fetchPrivateGames();
   }, []);
 
   return (
     <div>
       <NavBar />
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Public Games</h1>
+        <h1 className="text-2xl font-bold mb-4">Private Games</h1>
         <ul>
           {games.map((game) => (
             <li key={game._id.toString()} className=" mb-2">
@@ -43,7 +43,7 @@ const PublicGames = () => {
                     {" "}
                     {game.settings.name} · {game.players.length} / {game.settings.nbSeats} seats{" "}
                   </div>
-                  <CiUnlock className="text-gray-800" />
+                  <CiLock className="text-gray-800" />
                 </div>
                 <div className="flex text-gray-600">
                   {game.settings.entryFee}
@@ -54,8 +54,8 @@ const PublicGames = () => {
             </li>
           ))}
         </ul>
-        <button onClick={fetchPublicGames} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          {/*Create a button to call fetchPublicGames*/}
+        <button onClick={fetchPrivateGames} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          {/*Create a button to call fetchOpenGames*/}
           Refresh
         </button>
       </div>
@@ -63,4 +63,4 @@ const PublicGames = () => {
   );
 };
 
-export default PublicGames;
+export default PrivateGames;

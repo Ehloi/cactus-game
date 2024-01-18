@@ -16,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { email, name, password, passwordConfirm } = req.body;
       const { db } = await connectToDatabase();
-      const existingEmail = await db.collection("user").findOne({ email });
-      const existingName = await db.collection("user").findOne({ userName: name });
+      const existingEmail = await db.collection("User").findOne({ email });
+      const existingName = await db.collection("User").findOne({ userName: name });
 
       if (existingEmail) return res.status(409).json({ error: "You already registered with this email" });
 
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const hashedPassword = bcrypt.hashSync(password, 10);
       const newUser: User = { email, userName: name, password: hashedPassword, cash: 0, coins: 1000, image: "" };
-      await db.collection("user").insertOne(newUser);
+      await db.collection("User").insertOne(newUser);
       await signIn("credentials", {
         email,
         password,

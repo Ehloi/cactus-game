@@ -89,6 +89,22 @@ const CreateGame = () => {
               <span className="ml-2 text-gray-700">Private Game</span>
             </label>
           </div>
+          {gameSettings.isPrivate && (
+            <div className="mt-2">
+              <label htmlFor="gamePassword" className="block text-gray-700 text-sm font-bold mb-2">
+                Game Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="gamePassword"
+                placeholder="Enter game password"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                onChange={handleInputChange}
+                value={gameSettings.password}
+              />
+            </div>
+          )}
           <div className="mb-4">
             <label className="inline-flex items-center">
               <input type="checkbox" name="isRanked" checked={gameSettings.isRanked} onChange={handleInputChange} className="form-checkbox h-5 w-5 text-gray-600" />
