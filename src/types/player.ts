@@ -1,7 +1,7 @@
 import { Card } from "./card";
 import { User } from "./user";
 
-export interface PlayerType {
+export interface Player {
   user: User;
   cards: Card[];
   isReady: boolean;

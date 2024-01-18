@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "restart": "rm -rf .next && rm -rf node_modules && npm i && npm run build && npm run start",
     "start": "next start",
-    "lint": "next lint"
+    "real-time-server": "ts-node -P tsconfig.server.json real-time-server/server.ts",
+    "lint": "next lint",
+    "start-all": "npm run dev & npm run real-time-server"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,17 +18,23 @@
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.0.1",
+    "socket.io": "^4.7.4",
+    "tailwind": "^4.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/socket.io": "^3.0.2",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
   }
 }

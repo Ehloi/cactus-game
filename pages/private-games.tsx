@@ -25,6 +25,24 @@ const PrivateGames = () => {
       console.error("Failed to fetch private games:", error);
     }
   };
+  const joinGame = async (gameId: string) => {
+    try {
+      const response = await fetch(`/api/game/${gameId}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        // Handle errors or set error message
+        console.error("Failed to join game");
+      }
+    } catch (error: any) {
+      console.error("Failed to join game:", error);
+    }
+  };
   useEffect(() => {
     fetchPrivateGames();
   }, []);
@@ -37,13 +55,16 @@ const PrivateGames = () => {
         <ul>
           {games.map((game) => (
             <li key={game._id.toString()} className=" mb-2">
-              <Link href={`/game/${game._id}`} className="block p-4 mb-4 border border-gray-200 rounded shadow hover:shadow-md bg-white hover:bg-gray-100 text-blue-800">
+              <Link href={`/game/private-game`} className="block p-4 mb-4 border border-gray-200 rounded shadow hover:shadow-md bg-white hover:bg-gray-100 text-blue-800">
                 <div className="flex items-center space-x-4">
                   <div>
                     {" "}
                     {game.settings.name} · {game.players.length} / {game.settings.nbSeats} seats{" "}
                   </div>
                   <CiLock className="text-gray-800" />
+                  <button onClick={() => joinGame(game._id.toString())} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Join
+                  </button>
                 </div>
                 <div className="flex text-gray-600">
                   {game.settings.entryFee}

@@ -1,3 +1,4 @@
+import { Card } from "@/types/card";
 import mongoose from "mongoose";
 
 const cardSchema = new mongoose.Schema({
@@ -13,4 +14,4 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-export const CardSchema = mongoose.model("Card", cardSchema);
+export const CardSchema = mongoose.models.Card || mongoose.model<Card>("Card", cardSchema);

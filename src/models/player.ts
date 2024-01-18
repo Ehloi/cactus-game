@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 import { CardSchema } from "./card";
 import { UserSchema } from "./user";
+import { Player } from "@/types/player";
 
 export const playerSchema = new mongoose.Schema({
-  user: UserSchema,
-  cards: [CardSchema],
+  user: UserSchema.schema,
+  cards: [
+    {
+      type: CardSchema.schema,
+      required: true,
+    },
+  ],
   isReady: Boolean,
   isHost: Boolean,
   isTurn: Boolean,
@@ -12,4 +18,4 @@ export const playerSchema = new mongoose.Schema({
   isDisconnected: Boolean,
 });
 
-export const PlayerSchema = mongoose.model("Player", playerSchema);
+export const PlayerSchema = mongoose.models.Player || mongoose.model<Player>("Player", playerSchema);

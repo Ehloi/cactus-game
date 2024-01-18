@@ -3,9 +3,9 @@ import Link from "next/link";
 const Navbar = () => {
   const menuItems = [
     { name: "Dashboard", href: "/dashboard" },
-    { name: "Opened", href: "/opened-games" },
-    { name: "Private Games", href: "/private-games" },
-    { name: "Create Game", href: "/create-game" },
+    { name: "Public", href: "/public-games" },
+    { name: "Private", href: "/private-games" },
+    { name: "Create", href: "/create-game" },
   ];
 
   return (

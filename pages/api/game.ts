@@ -6,6 +6,7 @@ import { Game, GameSettings } from "@/types/game";
 import { User } from "@/types/user";
 import { Player } from "@/types/player";
 import { Types } from "mongoose";
+import { ObjectId } from "mongodb";
 
 function isGameValid(game: GameSettings, user: User): { bool: boolean; errorMsg?: string } {
   if (game.nbSeats < 2 || game.nbSeats > 8) return { bool: false, errorMsg: "Number of seats must be between 2 and 8" };
@@ -23,30 +24,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: "Unauthorized to game API" });
   }
   const { method } = req;
-  const { isPrivate } = req.query;
+  const { isPrivate, id } = req.query;
   const { db } = await connectToDatabase();
 
   switch (method) {
     case "GET":
-      switch (isPrivate) {
-        case "true":
+      if (id) {
+        // Fetch a specific game by ID
+        try {
+          const game = await db.collection<Game>("Game").findOne({ _id: new ObjectId(id as string) });
+          if (game) {
+            res.status(200).json(game);
+          } else {
+            res.status(404).json({ error: `Game not found for id ${id.toString()}` });
+          }
+        } catch (error) {
+          res.status(500).json({ error: "Failed to fetch the game" });
+        }
+      } else {
+        if (isPrivate === "true") {
           try {
             const privateGames = await db.collection<Game>("Game").find({ "settings.isPrivate": true }).toArray();
             res.status(200).json(privateGames);
           } catch (error) {
             res.status(500).json({ error: "Failed to fetch private games" });
           }
-          break;
-        case "false":
+        } else {
           try {
             const publicGames = await db.collection<Game>("Game").find({ "settings.isPrivate": false }).toArray();
             res.status(200).json(publicGames);
           } catch (error) {
             res.status(500).json({ error: "Failed to fetch public games" });
           }
-          break;
+        }
+        break;
       }
-      break;
     case "POST":
       try {
         const gameSettings: GameSettings = req.body; // Get game data from request body

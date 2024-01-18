@@ -25,6 +25,24 @@ const PublicGames = () => {
       console.error("Failed to fetch public games:", error);
     }
   };
+  const joinGame = async (gameId: string) => {
+    try {
+      const response = await fetch(`/api/game/${gameId}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        // Handle errors or set error message
+        console.error("Failed to join game");
+      }
+    } catch (error: any) {
+      console.error("Failed to join game:", error);
+    }
+  };
   useEffect(() => {
     fetchPublicGames();
   }, []);
@@ -44,6 +62,9 @@ const PublicGames = () => {
                     {game.settings.name} · {game.players.length} / {game.settings.nbSeats} seats{" "}
                   </div>
                   <CiUnlock className="text-gray-800" />
+                  <button onClick={() => joinGame(game._id.toString())} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Join
+                  </button>
                 </div>
                 <div className="flex text-gray-600">
                   {game.settings.entryFee}
